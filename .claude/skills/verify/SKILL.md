@@ -1,11 +1,11 @@
 ---
 name: verify
-description: Build/launch/drive recipe for verifying smile_concept_api changes at the HTTP surface.
+description: Build/launch/drive recipe for verifying smile_lab_api changes at the HTTP surface.
 ---
 
-# Verifying smile_concept_api
+# Verifying smile_lab_api
 
-Laravel 11+, PHP 8.4, MySQL (`smileconcept` on localhost, root/no password), Passport auth, queue = database.
+Laravel 11+, PHP 8.4, MySQL (`smilelab` on localhost, root/no password), Passport auth, queue = database.
 
 ## Launch
 
@@ -40,15 +40,15 @@ compiles to nothing.
 `StockConcurrencyTest` therefore skips on SQLite and needs a real MySQL database:
 
 ```bash
-mysql -uroot -e "CREATE DATABASE IF NOT EXISTS smileconcept_test"
-DB_CONNECTION=mysql DB_DATABASE=smileconcept_test php artisan test --filter=StockConcurrencyTest
+mysql -uroot -e "CREATE DATABASE IF NOT EXISTS smilelab_test"
+DB_CONNECTION=mysql DB_DATABASE=smilelab_test php artisan test --filter=StockConcurrencyTest
 ```
 
 It uses `DatabaseMigrations`, not `RefreshDatabase` — a second connection cannot
 see fixtures that are still inside an uncommitted transaction. Expect ~25s;
 most of that is `migrate:fresh` against MySQL.
 
-Never point it at `smileconcept`: it migrates fresh and would drop your dev data.
+Never point it at `smilelab`: it migrates fresh and would drop your dev data.
 
 ## Gotchas
 

@@ -32,7 +32,7 @@ class UserSeeder extends Seeder
 
         // 2. Create the Receptionist / front desk user
         $receptionist = User::updateOrCreate(
-            ['email' => 'receptionist@smileconcept.com'],
+            ['email' => 'receptionist@smilelab.com'],
             [
                 'name'              => 'Front Desk Receptionist',
                 'password'          => Hash::make('password'),
@@ -46,7 +46,7 @@ class UserSeeder extends Seeder
 
         // 3. Create the Clinic Admin user
         $admin = User::updateOrCreate(
-            ['email' => 'admin@smileconcept.com'],
+            ['email' => 'admin@smilelab.com'],
             [
                 'name'              => 'Clinic Administrator',
                 'password'          => Hash::make('password'),
@@ -60,7 +60,7 @@ class UserSeeder extends Seeder
 
         // 4. Create the demo Patient user (self-service portal)
         $patient = User::updateOrCreate(
-            ['email' => 'patient@smileconcept.com'],
+            ['email' => 'patient@smilelab.com'],
             [
                 'name'              => 'Demo Patient',
                 'password'          => Hash::make('password'),

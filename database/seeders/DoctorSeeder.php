@@ -16,8 +16,8 @@ class DoctorSeeder extends Seeder
      */
     private array $emails = [
         'juvileannmansader@gmail.com',
-        'maria.santos@smileconcept.com',
-        'john.delacruz@smileconcept.com',
+        'maria.santos@smilelab.com',
+        'john.delacruz@smilelab.com',
     ];
 
     public function run(): void

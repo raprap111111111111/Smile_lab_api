@@ -24,7 +24,7 @@ use Tests\TestCase;
  *
  * These tests therefore require MySQL and skip elsewhere. Run them with:
  *
- *   DB_CONNECTION=mysql DB_DATABASE=smileconcept_test \
+ *   DB_CONNECTION=mysql DB_DATABASE=smilelab_test \
  *     php artisan test --filter=StockConcurrencyTest
  *
  * DatabaseMigrations rather than RefreshDatabase on purpose: RefreshDatabase

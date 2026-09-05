@@ -13,7 +13,7 @@ class SettingSeeder extends Seeder
             // ─── Business ─────────────────────────────
             ['key' => 'clinic_name',   'value' => 'Smile Concept Dental', 'group' => 'business', 'type' => 'string',  'label' => 'Clinic Name',   'is_public' => true],
             ['key' => 'clinic_phone',  'value' => '+63 917 123 4567',     'group' => 'business', 'type' => 'string',  'label' => 'Clinic Phone',  'is_public' => true],
-            ['key' => 'clinic_email',  'value' => 'info@smileconcept.ph', 'group' => 'business', 'type' => 'string',  'label' => 'Clinic Email',  'is_public' => true],
+            ['key' => 'clinic_email',  'value' => 'info@smilelab.ph', 'group' => 'business', 'type' => 'string',  'label' => 'Clinic Email',  'is_public' => true],
             ['key' => 'clinic_address','value' => '123 Ayala Ave, Makati','group' => 'business', 'type' => 'string',  'label' => 'Address',       'is_public' => true],
 
             // ─── Booking: slot shape ──────────────────

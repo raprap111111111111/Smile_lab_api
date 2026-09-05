@@ -43,7 +43,7 @@ php artisan key:generate
 php artisan migrate --seed
 php artisan serve
 
-# 🦷 SmileConcept AI - Roboflow Dental X-Ray Integration
+# 🦷 smilelab AI - Roboflow Dental X-Ray Integration
 
 Complete setup guide for AI-powered dental X-ray analysis using Roboflow Computer Vision.
 
@@ -69,7 +69,7 @@ Complete setup guide for AI-powered dental X-ray analysis using Roboflow Compute
 
 ## 🎯 Overview
 
-**SmileConcept** uses **Roboflow's dentalXray Computer Vision Model** to automatically detect and analyze:
+**smilelab** uses **Roboflow's dentalXray Computer Vision Model** to automatically detect and analyze:
 
 - 🦷 Individual teeth (molars, canines, incisors, premolars)
 - 🩻 Anatomical regions (maxillary/mandibular)
@@ -93,7 +93,7 @@ Complete setup guide for AI-powered dental X-ray analysis using Roboflow Compute
                       │   - detected_conditions (JSON)       │
                       │   - scan_status: completed           │
                       │   - scan_confidence                  │
-                      └──────────────────────────────────────┘
+                      └──────────────────────────────────────┘s
 ```
 
 ---
@@ -117,7 +117,7 @@ Complete setup guide for AI-powered dental X-ray analysis using Roboflow Compute
 
 ```
 smile_concept_project/
-├── Smile_Concept_API/           ← Laravel Backend
+├── smile_lab_api/           ← Laravel Backend
 │   ├── app/
 │   │   ├── Domain/PatientAttachments/
 │   │   ├── Jobs/ProcessDentalXrayJob.php
@@ -293,8 +293,8 @@ curl -X POST "http://localhost:9001/dentalxray-s3wqb/2?api_key=YOUR_API_KEY" \
 ### 1. Clone & Install
 
 ```bash
-git clone https://github.com/YOUR_ORG/Smile_Concept_API.git
-cd Smile_Concept_API
+git clone https://github.com/YOUR_ORG/smile_lab_api.git
+cd smile_lab_api
 
 composer install
 cp .env.example .env
@@ -328,7 +328,7 @@ Edit `.env`:
 # ═══════════════════════════════════════════
 # APPLICATION
 # ═══════════════════════════════════════════
-APP_NAME=SmileConcept
+APP_NAME=smilelab
 APP_ENV=local
 APP_URL=http://localhost
 APP_KEY=base64:...
@@ -410,7 +410,7 @@ For **production**, create `.env.production`:
 
 ```env
 ENVIRONMENT=production
-API_BASE_URL=https://api.smileconcept.com/api/v1
+API_BASE_URL=https://api.smilelab.com/api/v1
 ```
 
 ### 3. Run the App
@@ -448,12 +448,12 @@ sail artisan queue:listen --tries=3
 
 ### Production (Supervisor)
 
-Create `/etc/supervisor/conf.d/smileconcept-worker.conf`:
+Create `/etc/supervisor/conf.d/smilelab-worker.conf`:
 
 ```ini
-[program:smileconcept-worker]
+[program:smilelab-worker]
 process_name=%(program_name)s_%(process_num)02d
-command=php /var/www/Smile_Concept_API/artisan queue:work --tries=3 --timeout=120
+command=php /var/www/smile_lab_api/artisan queue:work --tries=3 --timeout=120
 autostart=true
 autorestart=true
 stopasgroup=true
@@ -461,7 +461,7 @@ killasgroup=true
 user=www-data
 numprocs=2
 redirect_stderr=true
-stdout_logfile=/var/www/Smile_Concept_API/storage/logs/worker.log
+stdout_logfile=/var/www/smile_lab_api/storage/logs/worker.log
 stopwaitsecs=3600
 ```
 
@@ -469,7 +469,7 @@ Then:
 ```bash
 sudo supervisorctl reread
 sudo supervisorctl update
-sudo supervisorctl start smileconcept-worker:*
+sudo supervisorctl start smilelab-worker:*
 ```
 
 ### Verify Queue is Running
@@ -525,13 +525,13 @@ docker logs -f roboflow-inference
 
 **Terminal 2 — Laravel Backend:**
 ```bash
-cd Smile_Concept_API
+cd smile_lab_api
 php artisan serve
 ```
 
 **Terminal 3 — Queue Worker:**
 ```bash
-cd Smile_Concept_API
+cd smile_lab_api
 php artisan queue:listen --tries=3
 ```
 
@@ -646,7 +646,7 @@ flutter run
    ```env
    APP_ENV=production
    APP_DEBUG=false
-   APP_URL=https://api.smileconcept.com
+   APP_URL=https://api.smilelab.com
    ```
 
 2. **Optimize:**

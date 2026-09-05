@@ -196,7 +196,7 @@ class AuthController extends Controller
             $isExpired ? '' : $token,
             $isExpired ? -1 : self::REFRESH_TOKEN_EXPIRY,
             '/',
-            $isLocal ? null : '.smileconcept.com',
+            $isLocal ? null : '.smilelab.com',
             !$isLocal, // secure
             true,       // httpOnly
             'Lax'       // sameSite

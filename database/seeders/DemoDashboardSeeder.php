@@ -82,7 +82,7 @@ class DemoDashboardSeeder extends Seeder
 
                 $patient = User::create([
                     'name'              => $this->fakeName(),
-                    'email'             => "demo.patient.{$suffix}@smileconcept.test",
+                    'email'             => "demo.patient.{$suffix}@smilelab.test",
                     'password'          => Hash::make('password'),
                     'phone'             => '09' . random_int(100000000, 999999999),
                     'branch_id'         => $branchId,
