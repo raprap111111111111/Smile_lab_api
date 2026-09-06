@@ -17,10 +17,12 @@ class Item extends Model
         'category',
         'unit_of_measure',
         'minimum_threshold',
+        'maximum_threshold',
     ];
 
     protected $casts = [
         'minimum_threshold' => 'integer',
+        'maximum_threshold' => 'integer',
     ];
 
     /**
@@ -32,5 +34,13 @@ class Item extends Model
     public function inventories(): HasMany
     {
         return $this->hasMany(Inventory::class);
+    }
+
+    /**
+     * Active and archived stock batches for this item.
+     */
+    public function batches(): HasMany
+    {
+        return $this->hasMany(InventoryBatch::class);
     }
 }

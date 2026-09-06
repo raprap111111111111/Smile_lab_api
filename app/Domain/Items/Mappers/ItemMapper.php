@@ -16,7 +16,8 @@ class ItemMapper
             sku: $request->validated('sku'),
             category: $request->validated('category'),
             unitOfMeasure: $request->validated('unit_of_measure'),
-            minimumThreshold: (int) $request->validated('minimum_threshold', 10)
+            minimumThreshold: (int) $request->validated('minimum_threshold', 10),
+            maximumThreshold: $request->filled('maximum_threshold') ? (int) $request->validated('maximum_threshold') : null,
         );
     }
 
@@ -27,7 +28,8 @@ class ItemMapper
             sku: $request->validated('sku'),
             category: $request->validated('category'),
             unitOfMeasure: $request->validated('unit_of_measure'),
-            minimumThreshold: $request->has('minimum_threshold') ? (int) $request->validated('minimum_threshold') : null
+            minimumThreshold: $request->has('minimum_threshold') ? (int) $request->validated('minimum_threshold') : null,
+            maximumThreshold: $request->has('maximum_threshold') ? ($request->filled('maximum_threshold') ? (int) $request->validated('maximum_threshold') : null) : null,
         );
     }
 }

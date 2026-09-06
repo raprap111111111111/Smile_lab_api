@@ -24,6 +24,7 @@ class CreateItemAction
             'category' => $dto->category,
             'unit_of_measure' => $dto->unitOfMeasure,
             'minimum_threshold' => $dto->minimumThreshold,
+            'maximum_threshold' => $dto->maximumThreshold,
         ]);
     }
 }

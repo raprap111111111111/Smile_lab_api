@@ -22,6 +22,7 @@ class UpdateItemRequest extends FormRequest
             'category' => ['sometimes', 'required', 'string', 'max:100'],
             'unit_of_measure' => ['sometimes', 'required', 'string', 'max:50'],
             'minimum_threshold' => ['sometimes', 'required', 'integer', 'min:0'],
+            'maximum_threshold' => ['sometimes', 'nullable', 'integer', 'min:0'],
         ];
     }
 }

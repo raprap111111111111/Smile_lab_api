@@ -20,6 +20,7 @@ class StoreItemRequest extends FormRequest
             'category' => ['required', 'string', 'max:100'], 
             'unit_of_measure' => ['required', 'string', 'max:50'], 
             'minimum_threshold' => ['nullable', 'integer', 'min:0'],
+            'maximum_threshold' => ['nullable', 'integer', 'min:0'],
         ];
     }
 }

@@ -227,12 +227,15 @@ class RolePermissionSeeder extends Seeder
                 'invoice'          => $readOnly,
                 'payment'          => $readOnly,
 
-                // ── Inventory (read-only) ─────────────────────────────
-                // `item` as well as `inventory`: the stock list renders the
-                // item's name and SKU, so a dentist who cannot read the catalog
-                // sees a list of blanks.
-                'inventory'        => $readOnly,
-                'item'             => $readOnly,
+                // ── Inventory ─────────────────────────────────────────
+                // Dentists can manage the supply catalog and perform stock operations
+                'inventory'        => array_merge($basicCrud, [
+                    'adjust',
+                    'stock-in',
+                    'stock-out',
+                    'export',
+                ]),
+                'item'             => $basicCrud,
 
                 // ── Landing Page ──────────────────────────────────────
                 'service'          => $readOnly,
