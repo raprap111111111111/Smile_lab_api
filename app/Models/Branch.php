@@ -142,8 +142,10 @@ class Branch extends Model
             ->whereHas('roles', function ($q) {
                 $q->whereIn('name', [
                     'dentist',
+                    'doctor',
                     'admin',
                     'super-admin',
+                    'superadmin',
                     'receptionist',
                     'staff',
                     'assistant',

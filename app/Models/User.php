@@ -131,27 +131,27 @@ class User extends Authenticatable
 
     public function isSuperAdmin(): bool
     {
-        return $this->hasRole('super-admin');
+        return $this->hasAnyRole(['super-admin', 'superadmin']);
     }
 
     public function isAdmin(): bool
     {
-        return $this->hasRole(['admin', 'super-admin']);
+        return $this->hasAnyRole(['admin', 'super-admin', 'superadmin']);
     }
 
     public function isDoctor(): bool
     {
-        return $this->hasRole('doctor');
+        return $this->hasAnyRole(['doctor', 'dentist']);
     }
 
     public function isReceptionist(): bool
     {
-        return $this->hasRole('receptionist');
+        return $this->hasAnyRole(['receptionist', 'staff']);
     }
 
     public function isAssistant(): bool
     {
-        return $this->hasRole(['assistant', 'staff']);
+        return $this->hasAnyRole(['assistant', 'staff']);
     }
 
     public function isPatient(): bool
@@ -161,18 +161,16 @@ class User extends Authenticatable
 
     /**
      * Check if user has any staff role
-     *
-     * Role names here must match the seeded roles, which are exactly:
-     * super-admin, admin, dentist, receptionist, patient. The previous list
-     * asked for 'doctor', 'assistant' and 'staff' — none of which exist — and
-     * omitted 'dentist', so every dentist was treated as non-staff.
      */
     public function isStaff(): bool
     {
         return $this->hasAnyRole([
             'super-admin',
+            'superadmin',
             'admin',
+            'doctor',
             'dentist',
+            'staff',
             'receptionist',
         ]);
     }

@@ -14,5 +14,6 @@ final readonly class UpdateUserDTO
         public ?string $password = null,
         public ?bool $isActive = null,
         public readonly ?UploadedFile $photo = null, // ✅ NEW
+        public ?string $role = null,
     ) {}
 }

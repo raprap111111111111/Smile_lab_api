@@ -45,7 +45,7 @@ class BranchScope
             return $this->memo[$key];
         }
 
-        if ($user->hasRole('super-admin')) {
+        if ($user->hasAnyRole(['super-admin', 'superadmin'])) {
             return $this->memo[$key] = null;
         }
 

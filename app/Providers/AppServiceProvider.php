@@ -77,7 +77,7 @@ class AppServiceProvider extends ServiceProvider
 
         // Super-admin bypass
         Gate::before(function ($user, $ability) {
-            return $user->hasRole('super-admin') ? true : null;
+            return $user->hasAnyRole(['super-admin', 'superadmin']) ? true : null;
         });
 
         // ─── Token Lifetimes ──────────────────────────────────────

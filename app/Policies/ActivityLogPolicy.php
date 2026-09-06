@@ -38,6 +38,6 @@ class ActivityLogPolicy
      */
     public function delete(User $user, ActivityLog $log): bool
     {
-        return $user->hasRole('super-admin');
+        return $user->hasAnyRole(['super-admin', 'superadmin']);
     }
 }
