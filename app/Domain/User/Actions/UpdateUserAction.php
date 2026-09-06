@@ -48,7 +48,11 @@ class UpdateUserAction
                 $updatedUser->branches()->sync($dto->branchIds);
             }
 
-            return $updatedUser->load(['branches', 'patientProfile']);
+            if (!empty($dto->role)) {
+                $updatedUser->syncRoles([$dto->role]);
+            }
+
+            return $updatedUser->load(['branches', 'patientProfile', 'roles']);
         });
     }
 

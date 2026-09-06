@@ -16,6 +16,11 @@ class RoleSeeder extends Seeder
                 'description' => 'Full system access — system owner only',
             ],
             [
+                'name'        => 'superadmin',
+                'guard_name'  => 'api',
+                'description' => 'Full system access — system owner only',
+            ],
+            [
                 'name'        => 'admin',
                 'guard_name'  => 'api',
                 'description' => 'Clinic owner or branch administrator',
@@ -26,9 +31,19 @@ class RoleSeeder extends Seeder
                 'description' => 'Dental practitioner / doctor',
             ],
             [
+                'name'        => 'doctor',       
+                'guard_name'  => 'api',
+                'description' => 'Doctor / Dental practitioner',
+            ],
+            [
                 'name'        => 'receptionist',
                 'guard_name'  => 'api',
                 'description' => 'Front desk staff',
+            ],
+            [
+                'name'        => 'staff',
+                'guard_name'  => 'api',
+                'description' => 'Clinic staff member',
             ],
             [
                 'name'        => 'patient',

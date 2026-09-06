@@ -32,6 +32,7 @@ class UserMapper
             password: $request->validated('password'),
             isActive: $request->validated('is_active'),
             photo:     $request->file('photo'), // ✅ NEW
+            role:      $request->validated('role'),
         );
     }
 }
