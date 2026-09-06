@@ -361,6 +361,46 @@ class StockEndpointsTest extends TestCase
         $this->postJson(self::BASE . '/stock-movements', [])->assertStatus(405);
     }
 
+    public function test_inventory_batches_can_be_queried_with_large_limit_and_open_only(): void
+    {
+        Passport::actingAs($this->manager, ['*'], 'api');
+        $this->seedStock(50, '2026-12-31', 'LOT-BATCH-001');
+
+        $response = $this->getJson(self::BASE . '/inventory-batches?open_only=true&limit=200&order_by=expiry_date')
+            ->assertOk();
+
+        $response->assertJsonStructure([
+            'success',
+            'data' => [
+                'records' => [
+                    '*' => [
+                        'id',
+                        'branch_id',
+                        'item_id',
+                        'lot_number',
+                        'expiry_date',
+                        'quantity_received',
+                        'quantity_remaining',
+                        'received_at',
+                        'is_expired',
+                    ],
+                ],
+                'total',
+            ],
+            'message',
+        ]);
+    }
+
+    public function test_inventory_batches_limits_are_clamped_defensively(): void
+    {
+        Passport::actingAs($this->manager, ['*'], 'api');
+
+        // Even with a limit exceeding 250, prepareForValidation defensively clamps it without 422.
+        $this->getJson(self::BASE . '/inventory-batches?limit=500')
+            ->assertOk();
+    }
+
+
     // ── Helpers ───────────────────────────────────────
 
     private function seedStock(int $quantity, ?string $expiry, ?string $lot): void

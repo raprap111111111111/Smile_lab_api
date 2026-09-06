@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests\v1\Inventory;
 
 use Illuminate\Foundation\Http\FormRequest;
@@ -7,11 +9,28 @@ use Illuminate\Validation\Rule;
 
 class GetInventoryBatchesRequest extends FormRequest
 {
-    private const MAX_LIMIT = 100;
+    private const MAX_LIMIT = 250;
+
+    protected function prepareForValidation(): void
+    {
+        $merge = [];
+
+        if ($this->has('limit')) {
+            $merge['limit'] = min(max(1, (int) $this->input('limit')), self::MAX_LIMIT);
+        }
+
+        if ($this->has('open_only')) {
+            $merge['open_only'] = filter_var($this->input('open_only'), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ?? $this->input('open_only');
+        }
+
+        if (! empty($merge)) {
+            $this->merge($merge);
+        }
+    }
 
     public function authorize(): bool
     {
-        return $this->user()->can('inventory.viewAny');
+        return (bool) $this->user()?->can('inventory.viewAny');
     }
 
     public function rules(): array
@@ -28,3 +47,4 @@ class GetInventoryBatchesRequest extends FormRequest
         ];
     }
 }
+

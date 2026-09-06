@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Domain\Inventories\Repositories;
 
 use App\Domain\Branch\Services\BranchScope;
