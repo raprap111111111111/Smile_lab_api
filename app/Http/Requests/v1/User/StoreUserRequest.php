@@ -43,8 +43,9 @@ class StoreUserRequest extends FormRequest
             $creator = $this->user();
 
             $requiredRoles = [
-                'super-admin' => ['super-admin'],
-                'admin'       => ['admin', 'super-admin'],
+                'super-admin' => ['super-admin', 'superadmin'],
+                'superadmin'  => ['super-admin', 'superadmin'],
+                'admin'       => ['admin', 'super-admin', 'superadmin'],
             ];
 
             if (

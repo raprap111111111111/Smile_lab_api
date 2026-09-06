@@ -24,6 +24,7 @@ class RolePermissionSeeder extends Seeder
             // 🔱 SUPER ADMIN — full system access
             // ═══════════════════════════════════════════════════════════
             'super-admin' => '*',
+            'superadmin'  => '*',
 
             // ═══════════════════════════════════════════════════════════
             // 👑 ADMIN / OWNER
@@ -360,6 +361,10 @@ class RolePermissionSeeder extends Seeder
                 'payment'          => ['view', 'create'],
             ],
         ];
+
+        // Map alias roles
+        $roles['doctor'] = $roles['dentist'];
+        $roles['staff']  = $roles['receptionist'];
 
         // ═══════════════════════════════════════════════════════════════
         // ASSIGN PERMISSIONS TO ROLES
