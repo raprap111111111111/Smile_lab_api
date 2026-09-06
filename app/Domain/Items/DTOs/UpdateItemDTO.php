@@ -9,6 +9,7 @@ final readonly class UpdateItemDTO
         public ?string $sku = null,
         public ?string $category = null,
         public ?string $unitOfMeasure = null,
-        public ?int $minimumThreshold = null
+        public ?int $minimumThreshold = null,
+        public ?int $maximumThreshold = null,
     ) {}
 }

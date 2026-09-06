@@ -25,6 +25,9 @@ Route::post('inventories/adjust', [StockController::class, 'adjust'])
 Route::post('inventories/transfer', [StockController::class, 'transfer'])
     ->name('inventories.transfer');
 
+Route::post('inventories/writeoff', [StockController::class, 'writeoff'])
+    ->name('inventories.writeoff');
+
 Route::apiResource('inventories', InventoryController::class);
 
 // The ledger. Read-only — StockLedger is the only writer.

@@ -6,6 +6,7 @@ use App\Domain\Inventories\Actions\AdjustStockAction;
 use App\Domain\Inventories\Actions\RecordUsageAction;
 use App\Domain\Inventories\Actions\StockInAction;
 use App\Domain\Inventories\Actions\TransferStockAction;
+use App\Domain\Inventories\Actions\WriteOffStockAction;
 use App\Domain\Inventories\DTOs\MovementResult;
 use App\Domain\Inventories\Mappers\StockMapper;
 use App\Http\Controllers\Controller;
@@ -17,6 +18,7 @@ use App\Http\Resources\v1\InventoryResource;
 use App\Http\Resources\v1\StockMovementResource;
 use App\Models\Inventory;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 /**
  * Stock movements, as opposed to the branch/item mapping InventoryController
@@ -33,6 +35,7 @@ class StockController extends Controller
         private readonly RecordUsageAction $recordUsageAction,
         private readonly AdjustStockAction $adjustStockAction,
         private readonly TransferStockAction $transferStockAction,
+        private readonly WriteOffStockAction $writeOffStockAction,
     ) {}
 
     public function stockIn(StockInRequest $request): JsonResponse
@@ -115,6 +118,42 @@ class StockController extends Controller
             // Not enough stock to send. Unlike usage, a transfer is a promise
             // about the future, so this one really is a conflict.
             return $this->errorResponse($e->getMessage(), 409);
+        }
+    }
+
+    public function writeoff(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'branch_id' => ['nullable', 'integer', 'exists:branches,id'],
+            'item_id'   => ['required', 'integer', 'exists:items,id'],
+            'quantity'  => ['required', 'integer', 'min:1'],
+            'reason'    => ['required', 'string', 'max:255'],
+            'notes'     => ['nullable', 'string', 'max:1000'],
+        ]);
+
+        try {
+            $branchId = (int) ($validated['branch_id'] ?? 1);
+            $itemId = (int) $validated['item_id'];
+            $quantity = (int) $validated['quantity'];
+            $reason = (string) $validated['reason'];
+            $notes = $validated['notes'] ?? null;
+            $performedBy = $request->user()?->id;
+
+            $result = $this->writeOffStockAction->execute(
+                $branchId,
+                $itemId,
+                $quantity,
+                $reason,
+                $performedBy,
+                $notes,
+            );
+
+            return $this->successResponse(
+                $this->payload($branchId, $itemId, $result),
+                'Stock written off successfully.'
+            );
+        } catch (\InvalidArgumentException $e) {
+            return $this->errorResponse($e->getMessage(), 422);
         }
     }
 

@@ -28,6 +28,7 @@ class UpdateItemAction
             'category' => $dto->category,
             'unit_of_measure' => $dto->unitOfMeasure,
             'minimum_threshold' => $dto->minimumThreshold,
+            'maximum_threshold' => $dto->maximumThreshold,
         ], fn($value) => !is_null($value));
 
         return $this->repository->update($item, $data);
