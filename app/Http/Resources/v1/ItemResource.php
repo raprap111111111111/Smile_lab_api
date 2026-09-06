@@ -17,6 +17,8 @@ class ItemResource extends JsonResource
             'unit_of_measure' => $this->unit_of_measure,
             'minimum_threshold' => $this->minimum_threshold,
             'maximum_threshold' => $this->maximum_threshold,
+            'is_archived' => $this->trashed(),
+            'deleted_at' => $this->deleted_at?->toISOString(),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

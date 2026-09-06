@@ -2,49 +2,65 @@
 
 namespace App\Domain\Items\Actions;
 
+use App\Domain\Inventories\DTOs\RecordMovementDTO;
+use App\Domain\Inventories\Services\StockLedger;
 use App\Domain\Items\Repositories\ItemRepository;
+use App\Enums\StockMovementType;
 use App\Models\Item;
+use App\Models\TreatmentConsumable;
+use Illuminate\Support\Facades\DB;
 
 class DeleteItemAction
 {
     public function __construct(
-        private readonly ItemRepository $repository
+        private readonly ItemRepository $repository,
+        private readonly StockLedger $stockLedger,
     ) {}
 
+    /**
+     * Archives a supply item: safely draws down on-hand stock and logs an
+     * adjustment in the ledger, then soft-deletes the item while preserving
+     * all movement history and batch audit records.
+     */
     public function execute(Item $item): bool
     {
-        $this->assertNotStocked($item);
+        return DB::transaction(function () use ($item) {
+            $this->assertNotInTreatmentRecipes($item);
 
-        return $this->repository->delete($item);
+            // If there is on-hand stock, record an adjustment in the ledger to zero it out
+            foreach ($item->inventories as $inventory) {
+                if ($inventory->quantity > 0) {
+                    $this->stockLedger->record(new RecordMovementDTO(
+                        branchId: $inventory->branch_id,
+                        itemId: $item->id,
+                        type: StockMovementType::ADJUSTMENT,
+                        quantityDelta: -$inventory->quantity,
+                        reason: 'Item archived / discontinued',
+                        notes: 'Automatic stock write-off upon supply item archival',
+                        performedBy: auth()->id(),
+                    ));
+                }
+            }
+
+            return $item->delete();
+        });
     }
 
     /**
-     * An item that still has stock rows cannot be deleted.
-     *
-     * The foreign key is ON DELETE RESTRICT, so the database would reject this
-     * anyway — but with a raw SQL constraint error. Checking here turns that
-     * into a 409 with a message naming how many branches are affected, which is
-     * what the caller actually needs in order to act.
-     *
-     * Deliberately counts every stock row, not just non-empty ones: a
-     * zero-quantity row is still a branch's registration of this item, and it is
-     * what the constraint keys off.
+     * An item that is still wired into a treatment procedure recipe cannot be
+     * silently deleted, as doing so would alter future procedure deductions.
      *
      * @throws \RuntimeException
      */
-    private function assertNotStocked(Item $item): void
+    private function assertNotInTreatmentRecipes(Item $item): void
     {
-        $branchCount = $item->inventories()->count();
+        $hasRecipes = TreatmentConsumable::where('item_id', $item->id)->exists();
 
-        if ($branchCount === 0) {
-            return;
+        if ($hasRecipes) {
+            throw new \RuntimeException(
+                'This item is registered as a consumable in one or more treatment procedures. '
+                . 'Remove it from the treatment procedure recipes before deleting.'
+            );
         }
-
-        throw new \RuntimeException(sprintf(
-            'This item is still stocked at %d %s. Remove its stock records first, '
-            . 'or leave the item in place so its history stays intact.',
-            $branchCount,
-            $branchCount === 1 ? 'branch' : 'branches',
-        ));
     }
 }

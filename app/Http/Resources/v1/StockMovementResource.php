@@ -37,6 +37,7 @@ class StockMovementResource extends JsonResource
                 'name' => $this->item?->name,
                 'sku' => $this->item?->sku,
                 'unit_of_measure' => $this->item?->unit_of_measure,
+                'is_archived' => $this->item?->trashed() ?? false,
             ],
 
             'branch' => [

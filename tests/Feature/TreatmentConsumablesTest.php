@@ -185,6 +185,6 @@ class TreatmentConsumablesTest extends TestCase
         // restrictOnDelete on treatment_consumables.item_id — deleting the item
         // would silently change what every future extraction deducts.
         $this->expectException(\Illuminate\Database\QueryException::class);
-        $this->anesthetic->delete();
+        $this->anesthetic->forceDelete();
     }
 }
