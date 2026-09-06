@@ -35,6 +35,7 @@ class GetAllItemsRequest extends FormRequest
             'limit' => ['nullable', 'integer', 'min:1', 'max:' . self::MAX_LIMIT],
             'order_by' => ['nullable', Rule::in($this->getValidColumns())],
             'order_dir' => ['nullable', Rule::in(['asc', 'desc'])],
+            'status' => ['nullable', 'string', 'in:active,archived,all'],
         ];
     }
 

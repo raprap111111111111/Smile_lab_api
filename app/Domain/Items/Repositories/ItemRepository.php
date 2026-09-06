@@ -30,4 +30,21 @@ class ItemRepository extends BaseRepository
 
     protected string $defaultOrderBy = 'name';
     protected string $defaultOrderDirection = 'asc';
+
+    public function paginate(array $params = [], ?string $resourceClass = null): array
+    {
+        $query = $this->model::query()->with($this->relations);
+
+        if (($params['status'] ?? null) === 'archived' || !empty($params['archived'])) {
+            $query = $this->model::onlyTrashed()->with($this->relations);
+        } elseif (($params['status'] ?? null) === 'all') {
+            $query = $this->model::withTrashed()->with($this->relations);
+        }
+
+        return $this->paginateQuery(
+            $query,
+            $params,
+            $resourceClass
+        );
+    }
 }

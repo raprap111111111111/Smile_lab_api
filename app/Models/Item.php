@@ -6,10 +6,11 @@ use App\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Item extends Model
 {
-    use HasFactory, LogsActivity;
+    use HasFactory, LogsActivity, SoftDeletes;
 
     protected $fillable = [
         'name',
@@ -23,6 +24,7 @@ class Item extends Model
     protected $casts = [
         'minimum_threshold' => 'integer',
         'maximum_threshold' => 'integer',
+        'deleted_at' => 'datetime',
     ];
 
     /**

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\v1;
 
 use App\Domain\Items\Actions\CreateItemAction;
 use App\Domain\Items\Actions\DeleteItemAction;
+use App\Domain\Items\Actions\RestoreItemAction;
 use App\Domain\Items\Actions\UpdateItemAction;
 use App\Domain\Items\Mappers\ItemMapper;
 use App\Domain\Items\Repositories\ItemRepository;
@@ -16,6 +17,7 @@ use App\Http\Requests\v1\Item\UpdateItemRequest;
 use App\Http\Resources\v1\ItemResource;
 use App\Models\Item;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class ItemController extends Controller
 {
@@ -23,7 +25,8 @@ class ItemController extends Controller
         private readonly ItemRepository $repository,
         private readonly CreateItemAction $createAction,
         private readonly UpdateItemAction $updateAction,
-        private readonly DeleteItemAction $deleteAction
+        private readonly DeleteItemAction $deleteAction,
+        private readonly RestoreItemAction $restoreAction
     ) {}
 
     public function index(GetAllItemsRequest $request): JsonResponse
@@ -78,9 +81,25 @@ class ItemController extends Controller
     {
         try {
             $this->deleteAction->execute($item);
-            return $this->successResponse(null, 'Stock catalog item deleted successfully.');
+            return $this->successResponse(null, 'Supply item archived successfully. Ledger history has been preserved.');
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), 409);
+        }
+    }
+
+    public function restore(Request $request, int $id): JsonResponse
+    {
+        $item = Item::onlyTrashed()->findOrFail($id);
+        $this->authorize('delete', $item);
+
+        try {
+            $this->restoreAction->execute($item);
+            return $this->successResponse(
+                new ItemResource($item),
+                'Supply item restored to active inventory successfully.'
+            );
+        } catch (\Exception $e) {
+            return $this->errorResponse($e->getMessage(), 422);
         }
     }
 }
