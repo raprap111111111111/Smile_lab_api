@@ -19,6 +19,11 @@ class Role extends SpatieRole
         'is_active' => 'boolean',
     ];
 
+    public function resolveRouteBinding($value, $field = null)
+    {
+        return $this->where($field ?? (is_numeric($value) ? 'id' : 'name'), $value)->firstOrFail();
+    }
+
     protected static function booted()
     {
         // Whenever a role is being created, force the guard to 'api'

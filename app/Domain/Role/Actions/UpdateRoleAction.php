@@ -4,7 +4,7 @@ namespace App\Domain\Role\Actions;
 
 use App\Domain\Role\DTOs\UpdateRoleDTO;
 use App\Domain\Role\Repositories\RoleRepository;
-use Spatie\Permission\Models\Role;
+use App\Models\Role;
 
 class UpdateRoleAction
 {
