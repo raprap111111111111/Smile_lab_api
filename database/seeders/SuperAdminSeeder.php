@@ -17,7 +17,7 @@ class SuperAdminSeeder extends Seeder
 
         // Create or get Super Admin user
         $superAdmin = User::firstOrCreate(
-            ['email' => 'bariogahot@gmail.com'],
+            ['email' => 'jaldevecais2@gmail.com'],
             [
                 'name'              => 'Super Admin',
                 'password'          => bcrypt('password'),
@@ -28,6 +28,6 @@ class SuperAdminSeeder extends Seeder
         // Assign role
         $superAdmin->assignRole($superAdminRole);
 
-        $this->command->info('Super Admin created successfully with email: bariogahot@gmail.com');
+        $this->command->info('Super Admin created successfully with email: jaldevecais2@gmail.com');
     }
 }

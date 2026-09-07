@@ -19,7 +19,7 @@ class DoctorScheduleSeeder extends Seeder
         $this->cleanUp();
 
         $doctor = Doctor::whereHas('user', function ($q) {
-            $q->where('email', 'juvileannmansader@gmail.com');
+            $q->where('email', 'jal@gmail.com');
         })->first();
 
         if (!$doctor) {

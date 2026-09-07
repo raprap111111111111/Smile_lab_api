@@ -15,7 +15,7 @@ class DoctorSeeder extends Seeder
      * Doctor emails — used for cleanup before re-seeding.
      */
     private array $emails = [
-        'juvileannmansader@gmail.com',
+        'jal@gmail.com',
         'maria.santos@smilelab.com',
         'john.delacruz@smilelab.com',
     ];
@@ -26,7 +26,7 @@ class DoctorSeeder extends Seeder
 
         $this->seedDoctor(
             name:              'Dr. Juvile Ann Legislador Mansader',
-            email:             'juvileannmansader@gmail.com',
+            email:             'jal@gmail.com',
             phone:             '09943665968',
             licenseNumber:     '112627',
             specialization:    'General Dentistry',

@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use App\Models\Branch;
-use App\Models\PatientProfile;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -57,31 +56,5 @@ class UserSeeder extends Seeder
 
         $admin->branches()->sync($branchIds);
         $admin->assignRole('admin');
-
-        // 4. Create the demo Patient user (self-service portal)
-        $patient = User::updateOrCreate(
-            ['email' => 'patient@smilelab.com'],
-            [
-                'name'              => 'Demo Patient',
-                'password'          => Hash::make('password'),
-                'phone'             => '0900 000 0002',
-                'email_verified_at' => now(),
-            ]
-        );
-
-        $patient->branches()->sync([$branchIds[0]]);
-        $patient->assignRole('patient');
-
-        PatientProfile::updateOrCreate(
-            ['user_id' => $patient->id],
-            [
-                'date_of_birth'           => '1995-01-15',
-                'gender'                  => 'female',
-                'civil_status'            => 'single',
-                'address'                 => 'Default Patient Address',
-                'emergency_contact_name'  => 'Emergency Contact',
-                'emergency_contact_phone' => '0900 000 0003',
-            ]
-        );
     }
 }

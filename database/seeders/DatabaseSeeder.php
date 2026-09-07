@@ -30,5 +30,25 @@ class DatabaseSeeder extends Seeder
             GallerySeeder::class,
             DoctorScheduleSeeder::class
         ]);
+
+        $this->ensurePassportPersonalClient();
+    }
+
+    private function ensurePassportPersonalClient(): void
+    {
+        $hasClient = \Laravel\Passport\Client::where('grant_types', 'like', '%personal_access%')
+            ->where('provider', 'users')
+            ->where('revoked', false)
+            ->exists();
+
+        if (!$hasClient) {
+            \Illuminate\Support\Facades\Artisan::call('passport:client', [
+                '--personal' => true,
+                '--name' => 'Smile Lab Personal Access Client',
+                '--provider' => 'users',
+                '--no-interaction' => true,
+            ]);
+            $this->command->info('🔑 Passport Personal Access Client created automatically.');
+        }
     }
 }
