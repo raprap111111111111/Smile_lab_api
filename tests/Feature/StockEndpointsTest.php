@@ -414,6 +414,59 @@ class StockEndpointsTest extends TestCase
     }
 
 
+    public function test_writeoff_reduces_stock_and_logs_expired_writeoff_movement(): void
+    {
+        $this->seedStock(25, '2026-10-01', 'LOT-EXPIRED');
+        Passport::actingAs($this->manager, ['*'], 'api');
+
+        $response = $this->postJson(self::BASE . '/inventories/writeoff', [
+            'branch_id' => $this->main->id,
+            'item_id'   => $this->item->id,
+            'quantity'  => 5,
+            'reason'    => 'Expired during audit.',
+        ]);
+
+        $response->assertOk()
+            ->assertJsonPath('success', true)
+            ->assertJsonPath('data.balance_after', 20);
+
+        $movement = StockMovement::where('type', 'expired_writeoff')->sole();
+        $this->assertSame(-5, $movement->quantity_delta);
+        $this->assertSame('Expired during audit.', $movement->reason);
+    }
+
+    public function test_writeoff_with_batch_id_resolves_item_and_branch_automatically(): void
+    {
+        $this->seedStock(15, '2026-09-01', 'LOT-RECALL-9');
+        $batch = InventoryBatch::sole();
+        Passport::actingAs($this->manager, ['*'], 'api');
+
+        $response = $this->postJson(self::BASE . '/inventories/writeoff', [
+            'batch_id' => $batch->id,
+            'quantity' => 15,
+            'reason'   => 'Batch recalled by manufacturer.',
+        ]);
+
+        $response->assertOk()
+            ->assertJsonPath('success', true)
+            ->assertJsonPath('data.balance_after', 0);
+
+        $this->assertSame(0, $batch->fresh()->quantity_remaining);
+    }
+
+    public function test_writeoff_requires_authorization(): void
+    {
+        $this->seedStock(10, '2026-10-01', 'LOT-A');
+        Passport::actingAs($this->viewer, ['*'], 'api');
+
+        $this->postJson(self::BASE . '/inventories/writeoff', [
+            'branch_id' => $this->main->id,
+            'item_id'   => $this->item->id,
+            'quantity'  => 2,
+            'reason'    => 'Test unauthorized writeoff',
+        ])->assertForbidden();
+    }
+
     // ── Helpers ───────────────────────────────────────
 
     private function seedStock(int $quantity, ?string $expiry, ?string $lot): void

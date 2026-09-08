@@ -10,6 +10,7 @@ use App\Domain\Inventories\Actions\WriteOffStockAction;
 use App\Domain\Inventories\DTOs\MovementResult;
 use App\Domain\Inventories\Mappers\StockMapper;
 use App\Http\Controllers\Controller;
+use App\Domain\Branch\Services\BranchScope;
 use App\Http\Requests\v1\Inventory\AdjustStockRequest;
 use App\Http\Requests\v1\Inventory\RecordUsageRequest;
 use App\Http\Requests\v1\Inventory\StockInRequest;
@@ -17,6 +18,7 @@ use App\Http\Requests\v1\Inventory\TransferStockRequest;
 use App\Http\Resources\v1\InventoryResource;
 use App\Http\Resources\v1\StockMovementResource;
 use App\Models\Inventory;
+use App\Models\InventoryBatch;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -123,21 +125,41 @@ class StockController extends Controller
 
     public function writeoff(Request $request): JsonResponse
     {
+        if ($request->filled('batch_id') && ! $request->filled('item_id')) {
+            $batch = InventoryBatch::find($request->input('batch_id'));
+            if ($batch) {
+                $request->merge([
+                    'item_id'   => $batch->item_id,
+                    'branch_id' => $request->input('branch_id', $batch->branch_id),
+                ]);
+            }
+        }
+
         $validated = $request->validate([
             'branch_id' => ['nullable', 'integer', 'exists:branches,id'],
             'item_id'   => ['required', 'integer', 'exists:items,id'],
+            'batch_id'  => ['nullable', 'integer', 'exists:inventory_batches,id'],
             'quantity'  => ['required', 'integer', 'min:1'],
             'reason'    => ['required', 'string', 'max:255'],
             'notes'     => ['nullable', 'string', 'max:1000'],
         ]);
 
+        $user = $request->user();
+        if ($user && ! $user->can('inventory.adjust') && ! $user->can('inventory.stock-out')) {
+            return $this->errorResponse('Unauthorized to write off inventory stock.', 403);
+        }
+
+        $branchId = (int) ($validated['branch_id'] ?? 1);
+        if ($user && ! app(BranchScope::class)->canAccess($user, $branchId)) {
+            return $this->errorResponse('Forbidden branch access.', 403);
+        }
+
         try {
-            $branchId = (int) ($validated['branch_id'] ?? 1);
             $itemId = (int) $validated['item_id'];
             $quantity = (int) $validated['quantity'];
             $reason = (string) $validated['reason'];
             $notes = $validated['notes'] ?? null;
-            $performedBy = $request->user()?->id;
+            $performedBy = $user?->id;
 
             $result = $this->writeOffStockAction->execute(
                 $branchId,
