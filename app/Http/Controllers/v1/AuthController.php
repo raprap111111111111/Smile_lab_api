@@ -151,7 +151,17 @@ class AuthController extends Controller
 
     public function logout(Request $request): JsonResponse
     {
-        Auth::user()?->currentAccessToken()?->delete();
+        $user = $request->user('api') ?? $request->user() ?? Auth::user();
+        $token = $user?->currentAccessToken() ?? $user?->token();
+
+        if ($token !== null) {
+            if (method_exists($token, 'revoke')) {
+                $token->revoke();
+            }
+            if (method_exists($token, 'delete')) {
+                $token->delete();
+            }
+        }
 
         return $this->successResponse(
             null,
@@ -161,10 +171,10 @@ class AuthController extends Controller
     }
 
 
-    public function profile(): JsonResponse
+    public function profile(Request $request): JsonResponse
     {
         /** @var \App\Models\User $user */
-        $user = Auth::user();
+        $user = $request->user('api') ?? $request->user() ?? Auth::user();
 
         $user->load(['roles.permissions', 'permissions', 'patientProfile', 'branches']);
 
@@ -177,7 +187,7 @@ class AuthController extends Controller
     public function updatePassword(UpdatePasswordRequest $request): JsonResponse
     {
         /** @var \App\Models\User $user */
-        $user = Auth::user();
+        $user = $request->user('api') ?? $request->user() ?? Auth::user();
 
         $this->passwordAction->execute($user, $request->validated('password'));
 

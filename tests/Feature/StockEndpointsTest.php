@@ -413,6 +413,47 @@ class StockEndpointsTest extends TestCase
             ->assertOk();
     }
 
+    public function test_writeoff_disposes_stock_and_records_writeoff_movement(): void
+    {
+        Passport::actingAs($this->manager, ['*'], 'api');
+
+        $this->seedStock(20, '2026-12-31', 'LOT-WRITE-01');
+
+        $response = $this->postJson(self::BASE . '/inventories/writeoff', [
+            'branch_id' => $this->main->id,
+            'item_id'   => $this->item->id,
+            'quantity'  => 5,
+            'reason'    => 'Expired on shelf',
+            'notes'     => 'Disposed according to clinic protocol',
+        ])->assertOk();
+
+        $response->assertJsonPath('data.inventory.quantity', 15);
+
+        $this->assertDatabaseHas('stock_movements', [
+            'branch_id' => $this->main->id,
+            'item_id'   => $this->item->id,
+            'quantity_delta' => -5,
+            'reason'    => 'Expired on shelf',
+        ]);
+    }
+
+    public function test_writeoff_resolves_batch_id_automatically(): void
+    {
+        Passport::actingAs($this->manager, ['*'], 'api');
+
+        $this->seedStock(15, '2026-10-31', 'LOT-WRITE-02');
+        $batch = InventoryBatch::where('lot_number', 'LOT-WRITE-02')->firstOrFail();
+
+        $response = $this->postJson(self::BASE . '/inventories/writeoff', [
+            'batch_id'  => $batch->id,
+            'quantity'  => 3,
+            'reason'    => 'Contaminated vial',
+        ])->assertOk();
+
+        $response->assertJsonPath('data.inventory.quantity', 12);
+    }
+
+
 
     public function test_writeoff_reduces_stock_and_logs_expired_writeoff_movement(): void
     {

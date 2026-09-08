@@ -47,6 +47,8 @@ class PermissionController extends Controller
 
     public function show(Permission $permission): JsonResponse
     {
+        $this->authorize('view', $permission);
+
         return $this->responseSuccess(
             new PermissionResource($permission),
             'Permission found successfully'
@@ -81,6 +83,8 @@ class PermissionController extends Controller
 
     public function destroy(Permission $permission): JsonResponse
     {
+        $this->authorize('delete', $permission);
+
         $this->deleteAction->execute($permission);
 
         return $this->responseSuccess(null, 'Permission deleted successfully');
