@@ -225,6 +225,19 @@ class StockEndpointsTest extends TestCase
         $this->assertSame($before, StockMovement::count());
     }
 
+    public function test_adjust_accepts_quantity_alias_for_counted_quantity(): void
+    {
+        $this->seedStock(30, '2027-01-01', 'A1');
+        Passport::actingAs($this->manager, ['*'], 'api');
+
+        $this->postJson(self::BASE . '/inventories/adjust', [
+            'branch_id' => $this->main->id,
+            'item_id'   => $this->item->id,
+            'quantity'  => 25,
+            'reason'    => 'Count adjustment using quantity field.',
+        ])->assertOk()->assertJsonPath('data.balance_after', 25);
+    }
+
     // ── Transfer ──────────────────────────────────────
 
     public function test_transfer_moves_stock_preserving_lot_and_expiry(): void
