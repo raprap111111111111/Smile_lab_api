@@ -9,6 +9,15 @@ class AdjustStockRequest extends FormRequest
 {
     use ChecksBranchAccess;
 
+    protected function prepareForValidation(): void
+    {
+        if ($this->has('quantity') && ! $this->has('counted_quantity')) {
+            $this->merge([
+                'counted_quantity' => $this->input('quantity'),
+            ]);
+        }
+    }
+
     public function authorize(): bool
     {
         return $this->user()->can('inventory.adjust')
