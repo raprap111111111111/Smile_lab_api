@@ -9,6 +9,7 @@ final readonly class StockInDTO
         public int $branchId,
         public int $itemId,
         public int $quantity,
+        public ?int $supplierId = null,
         public ?string $lotNumber = null,
         public ?string $expiryDate = null,
         public ?string $receivedAt = null,

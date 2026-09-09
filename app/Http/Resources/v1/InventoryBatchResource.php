@@ -20,6 +20,12 @@ class InventoryBatchResource extends JsonResource
             'received_at' => $this->received_at?->toDateString(),
             'is_expired' => $this->isExpired(),
             'notes' => $this->notes,
+            'supplier_id' => $this->supplier_id,
+            'supplier' => $this->supplier ? [
+                'id' => $this->supplier->id,
+                'name' => $this->supplier->name,
+                'contact_person' => $this->supplier->contact_person,
+            ] : null,
 
             'item' => [
                 'id' => $this->item?->id,

@@ -26,6 +26,7 @@ class StockInAction
             itemId: $dto->itemId,
             type: StockMovementType::STOCK_IN,
             quantityDelta: $dto->quantity,
+            supplierId: $dto->supplierId,
             lotNumber: $dto->lotNumber,
             expiryDate: $dto->expiryDate,
             receivedAt: $dto->receivedAt,

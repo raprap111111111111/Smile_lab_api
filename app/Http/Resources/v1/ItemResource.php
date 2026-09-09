@@ -15,6 +15,13 @@ class ItemResource extends JsonResource
             'sku' => $this->sku,
             'category' => $this->category,
             'unit_of_measure' => $this->unit_of_measure,
+            'supplier_id' => $this->supplier_id,
+            'supplier' => $this->supplier ? [
+                'id' => $this->supplier->id,
+                'name' => $this->supplier->name,
+                'contact_person' => $this->supplier->contact_person,
+                'phone' => $this->supplier->phone,
+            ] : null,
             'minimum_threshold' => $this->minimum_threshold,
             'maximum_threshold' => $this->maximum_threshold,
             'is_archived' => $this->trashed(),

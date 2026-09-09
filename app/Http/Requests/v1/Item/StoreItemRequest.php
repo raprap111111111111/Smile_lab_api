@@ -19,6 +19,7 @@ class StoreItemRequest extends FormRequest
             'sku' => ['required', 'string', 'max:100', 'unique:items,sku'],
             'category' => ['required', 'string', 'max:100'], 
             'unit_of_measure' => ['required', 'string', 'max:50'], 
+            'supplier_id' => ['nullable', 'integer', 'exists:suppliers,id'],
             'minimum_threshold' => ['nullable', 'integer', 'min:0'],
             'maximum_threshold' => ['nullable', 'integer', 'min:0'],
         ];

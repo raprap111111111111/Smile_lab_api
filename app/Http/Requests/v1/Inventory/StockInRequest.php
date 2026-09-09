@@ -20,6 +20,7 @@ class StockInRequest extends FormRequest
         return [
             'branch_id'   => ['required', 'integer', 'exists:branches,id'],
             'item_id'     => ['required', 'integer', 'exists:items,id'],
+            'supplier_id' => ['nullable', 'integer', 'exists:suppliers,id'],
             'quantity'    => ['required', 'integer', 'min:1'],
             'lot_number'  => ['nullable', 'string', 'max:100'],
             // Stock already past its date has no business entering the shelf.

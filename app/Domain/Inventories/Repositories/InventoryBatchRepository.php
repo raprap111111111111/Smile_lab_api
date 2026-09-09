@@ -19,6 +19,7 @@ class InventoryBatchRepository extends BaseRepository
 
     protected array $relations = [
         'item',
+        'supplier',
         'branch',
     ];
 

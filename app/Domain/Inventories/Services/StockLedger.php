@@ -63,6 +63,7 @@ final class StockLedger
         $batch = InventoryBatch::create([
             'branch_id'          => $dto->branchId,
             'item_id'            => $dto->itemId,
+            'supplier_id'        => $dto->supplierId,
             'lot_number'         => $dto->lotNumber,
             'expiry_date'        => $dto->expiryDate,
             'quantity_received'  => $dto->quantityDelta,
