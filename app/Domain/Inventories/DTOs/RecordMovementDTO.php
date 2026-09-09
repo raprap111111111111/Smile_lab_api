@@ -22,6 +22,7 @@ final readonly class RecordMovementDTO
         public int $quantityDelta,
 
         // Batch details, used only when adding stock.
+        public ?int $supplierId = null,
         public ?string $lotNumber = null,
         public ?string $expiryDate = null,
         public ?string $receivedAt = null,

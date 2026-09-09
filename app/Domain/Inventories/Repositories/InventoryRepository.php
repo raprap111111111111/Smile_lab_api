@@ -20,7 +20,7 @@ class InventoryRepository extends BaseRepository
     // through whenLoaded(), so leaving this empty made index() lazy-load both
     // on every row.
     protected array $relations = [
-        'item',
+        'item.supplier',
         'branch',
     ];
 

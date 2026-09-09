@@ -9,6 +9,10 @@ class ItemRepository extends BaseRepository
 {
     protected string $model = Item::class;
 
+    protected array $relations = [
+        'supplier',
+    ];
+
     protected array $searchable = [
         'name',
         'sku',

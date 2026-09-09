@@ -21,6 +21,7 @@ class UpdateItemRequest extends FormRequest
             'sku' => ['sometimes', 'required', 'string', 'max:100', "unique:items,sku,{$itemId}"],
             'category' => ['sometimes', 'required', 'string', 'max:100'],
             'unit_of_measure' => ['sometimes', 'required', 'string', 'max:50'],
+            'supplier_id' => ['sometimes', 'nullable', 'integer', 'exists:suppliers,id'],
             'minimum_threshold' => ['sometimes', 'required', 'integer', 'min:0'],
             'maximum_threshold' => ['sometimes', 'nullable', 'integer', 'min:0'],
         ];

@@ -19,6 +19,7 @@ class StockMapper
             branchId: (int) $request->validated('branch_id'),
             itemId: (int) $request->validated('item_id'),
             quantity: (int) $request->validated('quantity'),
+            supplierId: $request->filled('supplier_id') ? (int) $request->validated('supplier_id') : null,
             lotNumber: $request->validated('lot_number'),
             expiryDate: $request->validated('expiry_date'),
             receivedAt: $request->validated('received_at'),

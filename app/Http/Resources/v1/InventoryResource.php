@@ -25,7 +25,15 @@ class InventoryResource extends JsonResource
                 'sku' => $this->item?->sku,
                 'category' => $this->item?->category,
                 'unit_of_measure' => $this->item?->unit_of_measure,
+                'supplier_id' => $this->item?->supplier_id,
+                'supplier' => $this->item?->supplier ? [
+                    'id' => $this->item->supplier->id,
+                    'name' => $this->item->supplier->name,
+                    'contact_person' => $this->item->supplier->contact_person,
+                    'phone' => $this->item->supplier->phone,
+                ] : null,
                 'minimum_threshold' => $this->item?->minimum_threshold,
+                'maximum_threshold' => $this->item?->maximum_threshold,
             ],
 
             // Nested Branch Details

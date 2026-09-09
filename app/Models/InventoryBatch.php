@@ -23,6 +23,7 @@ class InventoryBatch extends Model
     protected $fillable = [
         'branch_id',
         'item_id',
+        'supplier_id',
         'lot_number',
         'expiry_date',
         'quantity_received',
@@ -34,6 +35,7 @@ class InventoryBatch extends Model
     protected function casts(): array
     {
         return [
+            'supplier_id'        => 'integer',
             'expiry_date'        => 'date',
             'received_at'        => 'date',
             'quantity_received'  => 'integer',
@@ -49,6 +51,11 @@ class InventoryBatch extends Model
     public function item(): BelongsTo
     {
         return $this->belongsTo(Item::class);
+    }
+
+    public function supplier(): BelongsTo
+    {
+        return $this->belongsTo(Supplier::class);
     }
 
     public function movements(): HasMany
