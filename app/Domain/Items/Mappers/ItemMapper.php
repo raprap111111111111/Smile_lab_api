@@ -32,6 +32,8 @@ class ItemMapper
             minimumThreshold: $request->has('minimum_threshold') ? (int) $request->validated('minimum_threshold') : null,
             maximumThreshold: $request->has('maximum_threshold') ? ($request->filled('maximum_threshold') ? (int) $request->validated('maximum_threshold') : null) : null,
             supplierId: $request->has('supplier_id') ? ($request->filled('supplier_id') ? (int) $request->validated('supplier_id') : null) : null,
+            hasSupplierId: $request->has('supplier_id'),
+            hasMaximumThreshold: $request->has('maximum_threshold'),
         );
     }
 }

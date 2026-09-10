@@ -27,10 +27,16 @@ class UpdateItemAction
             'sku' => $sku,
             'category' => $dto->category,
             'unit_of_measure' => $dto->unitOfMeasure,
-            'supplier_id' => $dto->supplierId,
             'minimum_threshold' => $dto->minimumThreshold,
-            'maximum_threshold' => $dto->maximumThreshold,
         ], fn($value) => !is_null($value));
+
+        if ($dto->hasSupplierId) {
+            $data['supplier_id'] = $dto->supplierId;
+        }
+
+        if ($dto->hasMaximumThreshold) {
+            $data['maximum_threshold'] = $dto->maximumThreshold;
+        }
 
         return $this->repository->update($item, $data);
     }
