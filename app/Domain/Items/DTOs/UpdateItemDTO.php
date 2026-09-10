@@ -12,5 +12,7 @@ final readonly class UpdateItemDTO
         public ?int $minimumThreshold = null,
         public ?int $maximumThreshold = null,
         public ?int $supplierId = null,
+        public bool $hasSupplierId = false,
+        public bool $hasMaximumThreshold = false,
     ) {}
 }
