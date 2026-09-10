@@ -14,6 +14,7 @@ use App\Http\Requests\v1\User\UpdateUserRequest;
 use App\Http\Resources\v1\UserResource;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
@@ -33,6 +34,8 @@ class UserController extends Controller
 
     public function show(User $user): JsonResponse
     {
+        $this->authorize('view', $user);
+
         return $this->responseSuccess(
             new UserResource($user),
             'User found successfully'
@@ -78,8 +81,20 @@ class UserController extends Controller
         );
     }
 
-    public function destroy(User $user): JsonResponse
+    public function destroy(Request $request, User $user): JsonResponse
     {
+        $this->authorize('delete', $user);
+
+        $actor = $request->user();
+
+        if ($actor !== null && $actor->id === $user->id) {
+            abort(422, 'You cannot delete your own account.');
+        }
+
+        if ($user->isSuperAdmin() && ($actor === null || ! $actor->isSuperAdmin())) {
+            abort(403, 'Only Super Administrators can delete Super Administrator accounts.');
+        }
+
         $this->deleteAction->execute($user);
         return $this->responseSuccess(null, 'User deleted successfully');
     }

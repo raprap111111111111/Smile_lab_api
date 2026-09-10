@@ -13,7 +13,7 @@ class UserPolicy
 
     public function view(User $user, User $model): bool
     {
-        return $user->can('user.view');
+        return $user->can('user.view') || $user->id === $model->id;
     }
 
     public function create(User $user): bool

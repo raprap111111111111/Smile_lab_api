@@ -34,6 +34,8 @@ class RoleController extends Controller
 
     public function show(Role $role): JsonResponse
     {
+        $this->authorize('view', $role);
+
         $role->load('permissions');
 
         return $this->responseSuccess(
@@ -70,12 +72,27 @@ class RoleController extends Controller
 
     public function destroy(Role $role): JsonResponse
     {
+        $this->authorize('delete', $role);
+
+        $systemRoles = ['super-admin', 'superadmin', 'admin', 'doctor', 'dentist', 'receptionist', 'staff', 'patient'];
+        if (in_array(strtolower($role->name), $systemRoles, true)) {
+            abort(422, 'System-critical roles cannot be deleted.');
+        }
+
         $this->deleteAction->execute($role);
         return $this->responseSuccess(null, 'Role deleted successfully');
     }
 
     public function syncPermissions(Request $request, Role $role): JsonResponse
     {
+        $this->authorize('update', $role);
+
+        if (in_array(strtolower($role->name), ['super-admin', 'superadmin'], true)) {
+            if (! $request->user()?->hasAnyRole(['super-admin', 'superadmin'])) {
+                abort(403, 'Only Super Administrators can modify Super Administrator permissions.');
+            }
+        }
+
         $validated = $request->validate([
             'permissions' => ['nullable', 'array'],
             'permissions.*' => ['string', 'exists:permissions,name'],
@@ -92,6 +109,14 @@ class RoleController extends Controller
 
     public function assignPermission(Request $request, Role $role): JsonResponse
     {
+        $this->authorize('update', $role);
+
+        if (in_array(strtolower($role->name), ['super-admin', 'superadmin'], true)) {
+            if (! $request->user()?->hasAnyRole(['super-admin', 'superadmin'])) {
+                abort(403, 'Only Super Administrators can modify Super Administrator permissions.');
+            }
+        }
+
         $validated = $request->validate([
             'permissions' => ['required', 'array'],
             'permissions.*' => ['string', 'exists:permissions,name'],
@@ -106,8 +131,16 @@ class RoleController extends Controller
         );
     }
 
-    public function removePermission(Role $role, Permission $permission): JsonResponse
+    public function removePermission(Request $request, Role $role, Permission $permission): JsonResponse
     {
+        $this->authorize('update', $role);
+
+        if (in_array(strtolower($role->name), ['super-admin', 'superadmin'], true)) {
+            if (! $request->user()?->hasAnyRole(['super-admin', 'superadmin'])) {
+                abort(403, 'Only Super Administrators can modify Super Administrator permissions.');
+            }
+        }
+
         $role->revokePermissionTo($permission->name);
         $role->load('permissions');
 

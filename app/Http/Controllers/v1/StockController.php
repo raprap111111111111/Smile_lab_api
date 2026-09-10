@@ -15,6 +15,7 @@ use App\Http\Requests\v1\Inventory\AdjustStockRequest;
 use App\Http\Requests\v1\Inventory\RecordUsageRequest;
 use App\Http\Requests\v1\Inventory\StockInRequest;
 use App\Http\Requests\v1\Inventory\TransferStockRequest;
+use App\Http\Requests\v1\Inventory\WriteOffStockRequest;
 use App\Http\Resources\v1\InventoryResource;
 use App\Http\Resources\v1\StockMovementResource;
 use App\Models\Inventory;
@@ -123,7 +124,7 @@ class StockController extends Controller
         }
     }
 
-    public function writeoff(Request $request): JsonResponse
+    public function writeoff(WriteOffStockRequest $request): JsonResponse
     {
         if ($request->filled('batch_id') && ! $request->filled('item_id')) {
             $batch = InventoryBatch::find($request->input('batch_id'));
