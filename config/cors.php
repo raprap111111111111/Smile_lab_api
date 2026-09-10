@@ -10,8 +10,8 @@ return [
 
     'allowed_methods' => ['*'],
 
-    // ✅ Empty when using patterns
-    'allowed_origins' => [],
+    // Allowed origins: reads from CORS_ALLOWED_ORIGINS (comma-separated), e.g. https://app.example.com
+    'allowed_origins' => array_values(array_filter(array_map('trim', explode(',', (string) env('CORS_ALLOWED_ORIGINS', ''))))),
 
     // ✅ Regex — matches any localhost port
     'allowed_origins_patterns' => [
