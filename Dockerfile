@@ -17,7 +17,7 @@ RUN composer install \
 # ==============================================================================
 # Stage 2: Production PHP-FPM + Nginx Runtime
 # ==============================================================================
-FROM php:8.3-fpm-bookworm
+FROM php:8.4-fpm-bookworm
 
 LABEL maintainer="Smile Concept"
 ENV DEBIAN_FRONTEND=noninteractive
