@@ -11,5 +11,6 @@ final readonly class CreateItemDTO
         public string $unitOfMeasure,
         public int $minimumThreshold = 10,
         public ?int $maximumThreshold = null,
+        public ?int $supplierId = null,
     ) {}
 }
