@@ -11,5 +11,6 @@ final readonly class UpdateItemDTO
         public ?string $unitOfMeasure = null,
         public ?int $minimumThreshold = null,
         public ?int $maximumThreshold = null,
+        public ?int $supplierId = null,
     ) {}
 }

@@ -18,6 +18,7 @@ class ItemMapper
             unitOfMeasure: $request->validated('unit_of_measure'),
             minimumThreshold: (int) $request->validated('minimum_threshold', 10),
             maximumThreshold: $request->filled('maximum_threshold') ? (int) $request->validated('maximum_threshold') : null,
+            supplierId: $request->filled('supplier_id') ? (int) $request->validated('supplier_id') : null,
         );
     }
 
@@ -30,6 +31,7 @@ class ItemMapper
             unitOfMeasure: $request->validated('unit_of_measure'),
             minimumThreshold: $request->has('minimum_threshold') ? (int) $request->validated('minimum_threshold') : null,
             maximumThreshold: $request->has('maximum_threshold') ? ($request->filled('maximum_threshold') ? (int) $request->validated('maximum_threshold') : null) : null,
+            supplierId: $request->has('supplier_id') ? ($request->filled('supplier_id') ? (int) $request->validated('supplier_id') : null) : null,
         );
     }
 }

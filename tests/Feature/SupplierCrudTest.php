@@ -28,6 +28,9 @@ class SupplierCrudTest extends TestCase
             'supplier.update',
             'supplier.delete',
             'inventory.stock-in',
+            'item.create',
+            'item.view',
+            'item.viewAny',
         ]);
         Passport::actingAs($this->admin);
     }
@@ -98,5 +101,31 @@ class SupplierCrudTest extends TestCase
             'lot_number' => 'LOT-999',
             'quantity_remaining' => 25,
         ]);
+    }
+
+    public function test_can_create_item_with_supplier_id_persisted(): void
+    {
+        $supplier = Supplier::create([
+            'name' => 'Direct Dental Supply',
+            'contact_person' => 'Bob Smith',
+        ]);
+
+        $response = $this->postJson('/api/v1/items', [
+            'name' => 'Composite Syringe A2',
+            'sku' => 'DEN-RES-A2',
+            'category' => 'Restorative',
+            'unit_of_measure' => 'Syringe',
+            'minimum_threshold' => 10,
+            'supplier_id' => $supplier->id,
+        ]);
+
+        $response->assertCreated();
+        $this->assertDatabaseHas('items', [
+            'sku' => 'DEN-RES-A2',
+            'supplier_id' => $supplier->id,
+        ]);
+
+        $response->assertJsonPath('data.supplier_id', $supplier->id);
+        $response->assertJsonPath('data.supplier.name', 'Direct Dental Supply');
     }
 }

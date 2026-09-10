@@ -23,6 +23,7 @@ class CreateItemAction
             'sku' => $cleanSku,
             'category' => $dto->category,
             'unit_of_measure' => $dto->unitOfMeasure,
+            'supplier_id' => $dto->supplierId,
             'minimum_threshold' => $dto->minimumThreshold,
             'maximum_threshold' => $dto->maximumThreshold,
         ]);
