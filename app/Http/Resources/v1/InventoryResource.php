@@ -34,6 +34,10 @@ class InventoryResource extends JsonResource
                 ] : null,
                 'minimum_threshold' => $this->item?->minimum_threshold,
                 'maximum_threshold' => $this->item?->maximum_threshold,
+                'unit_cost' => (float) ($this->item?->unit_cost ?? 0),
+                'storage_location' => $this->item?->storage_location,
+                'notes' => $this->item?->notes,
+                'updated_at' => $this->item?->updated_at,
             ],
 
             // Nested Branch Details

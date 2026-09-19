@@ -28,6 +28,7 @@ class UpdateItemAction
             'category' => $dto->category,
             'unit_of_measure' => $dto->unitOfMeasure,
             'minimum_threshold' => $dto->minimumThreshold,
+            'unit_cost' => $dto->unitCost,
         ], fn($value) => !is_null($value));
 
         if ($dto->hasSupplierId) {
@@ -36,6 +37,14 @@ class UpdateItemAction
 
         if ($dto->hasMaximumThreshold) {
             $data['maximum_threshold'] = $dto->maximumThreshold;
+        }
+
+        if ($dto->hasStorageLocation) {
+            $data['storage_location'] = $dto->storageLocation;
+        }
+
+        if ($dto->hasNotes) {
+            $data['notes'] = $dto->notes;
         }
 
         return $this->repository->update($item, $data);

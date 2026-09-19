@@ -24,6 +24,9 @@ class UpdateItemRequest extends FormRequest
             'supplier_id' => ['sometimes', 'nullable', 'integer', 'exists:suppliers,id'],
             'minimum_threshold' => ['sometimes', 'required', 'integer', 'min:0'],
             'maximum_threshold' => ['sometimes', 'nullable', 'integer', 'min:0'],
+            'unit_cost' => ['sometimes', 'required', 'numeric', 'min:0', 'max:9999999999.99'],
+            'storage_location' => ['sometimes', 'nullable', 'string', 'max:150'],
+            'notes' => ['sometimes', 'nullable', 'string', 'max:1000'],
         ];
     }
 }

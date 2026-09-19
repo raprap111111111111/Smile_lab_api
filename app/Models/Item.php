@@ -21,12 +21,16 @@ class Item extends Model
         'supplier_id',
         'minimum_threshold',
         'maximum_threshold',
+        'unit_cost',
+        'storage_location',
+        'notes',
     ];
 
     protected $casts = [
         'supplier_id' => 'integer',
         'minimum_threshold' => 'integer',
         'maximum_threshold' => 'integer',
+        'unit_cost' => 'decimal:2',
         'deleted_at' => 'datetime',
     ];
 

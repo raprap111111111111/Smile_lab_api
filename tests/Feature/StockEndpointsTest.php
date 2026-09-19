@@ -508,6 +508,68 @@ class StockEndpointsTest extends TestCase
         ])->assertForbidden();
     }
 
+    public function test_writeoff_with_batch_id_draws_from_that_batch_not_fefo(): void
+    {
+        $this->seedStock(15, '2026-12-31', 'LOT-EARLY');
+        $this->seedStock(10, '2027-06-30', 'LOT-RECALLED');
+        $early = InventoryBatch::where('lot_number', 'LOT-EARLY')->sole();
+        $recalled = InventoryBatch::where('lot_number', 'LOT-RECALLED')->sole();
+
+        $this->postJson(self::BASE . '/inventories/writeoff', [
+            'batch_id' => $recalled->id,
+            'quantity' => 2,
+            'reason'   => 'Manufacturer recall',
+        ])->assertOk()
+            ->assertJsonPath('data.balance_after', 23);
+
+        $this->assertSame(15, $early->fresh()->quantity_remaining);
+        $this->assertSame(8, $recalled->fresh()->quantity_remaining);
+        $this->assertDatabaseHas('stock_movements', [
+            'inventory_batch_id' => $recalled->id,
+            'quantity_delta'     => -2,
+            'type'               => 'expired_writeoff',
+        ]);
+    }
+
+    public function test_writeoff_beyond_the_batch_remaining_is_refused(): void
+    {
+        $this->seedStock(15, '2026-12-31', 'LOT-EARLY');
+        $this->seedStock(10, '2027-06-30', 'LOT-RECALLED');
+        $recalled = InventoryBatch::where('lot_number', 'LOT-RECALLED')->sole();
+
+        $this->postJson(self::BASE . '/inventories/writeoff', [
+            'batch_id' => $recalled->id,
+            'quantity' => 11,
+            'reason'   => 'Manufacturer recall',
+        ])->assertStatus(422);
+
+        $this->assertSame(10, $recalled->fresh()->quantity_remaining);
+        $this->assertSame(0, StockMovement::where('type', 'expired_writeoff')->count());
+    }
+
+    public function test_writeoff_rejects_a_batch_belonging_to_another_item(): void
+    {
+        $this->seedStock(10, '2027-06-30', 'LOT-A');
+        $batch = InventoryBatch::sole();
+        $other = Item::create([
+            'name' => 'Articaine 4% carpule',
+            'sku' => 'ANES-ARTI-4',
+            'category' => 'Anesthetics',
+            'unit_of_measure' => 'carpule',
+            'minimum_threshold' => 10,
+        ]);
+
+        $this->postJson(self::BASE . '/inventories/writeoff', [
+            'branch_id' => $this->main->id,
+            'item_id'   => $other->id,
+            'batch_id'  => $batch->id,
+            'quantity'  => 1,
+            'reason'    => 'Wrong lot',
+        ])->assertStatus(422);
+
+        $this->assertSame(10, $batch->fresh()->quantity_remaining);
+    }
+
     // ── Helpers ───────────────────────────────────────
 
     private function seedStock(int $quantity, ?string $expiry, ?string $lot): void

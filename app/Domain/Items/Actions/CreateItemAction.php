@@ -26,6 +26,9 @@ class CreateItemAction
             'supplier_id' => $dto->supplierId,
             'minimum_threshold' => $dto->minimumThreshold,
             'maximum_threshold' => $dto->maximumThreshold,
+            'unit_cost' => $dto->unitCost,
+            'storage_location' => $dto->storageLocation,
+            'notes' => $dto->notes,
         ]);
     }
 }

@@ -17,11 +17,14 @@ class StoreItemRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'sku' => ['required', 'string', 'max:100', 'unique:items,sku'],
-            'category' => ['required', 'string', 'max:100'], 
-            'unit_of_measure' => ['required', 'string', 'max:50'], 
+            'category' => ['required', 'string', 'max:100'],
+            'unit_of_measure' => ['required', 'string', 'max:50'],
             'supplier_id' => ['nullable', 'integer', 'exists:suppliers,id'],
             'minimum_threshold' => ['nullable', 'integer', 'min:0'],
             'maximum_threshold' => ['nullable', 'integer', 'min:0'],
+            'unit_cost' => ['nullable', 'numeric', 'min:0', 'max:9999999999.99'],
+            'storage_location' => ['nullable', 'string', 'max:150'],
+            'notes' => ['nullable', 'string', 'max:1000'],
         ];
     }
 }
