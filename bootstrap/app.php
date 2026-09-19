@@ -3,6 +3,7 @@
 // DELETE this import:
 // use App\Http\Middleware\Cors;
 
+use App\Http\Middleware\PreserveFloatInJson;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -28,6 +29,9 @@ return Application::configure(basePath: dirname(__DIR__))
         // $middleware->append(Cors::class);
 
         $middleware->redirectGuestsTo(fn () => null);
+
+        // Preserve float formatting in JSON responses (e.g., 0.0 instead of 0)
+        $middleware->append(PreserveFloatInJson::class);
 
         $middleware->alias([
             'role'               => RoleMiddleware::class,

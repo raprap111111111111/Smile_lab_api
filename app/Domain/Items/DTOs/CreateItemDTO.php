@@ -12,5 +12,8 @@ final readonly class CreateItemDTO
         public int $minimumThreshold = 10,
         public ?int $maximumThreshold = null,
         public ?int $supplierId = null,
+        public float $unitCost = 0.0,
+        public ?string $storageLocation = null,
+        public ?string $notes = null,
     ) {}
 }

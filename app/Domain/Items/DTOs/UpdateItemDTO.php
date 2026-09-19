@@ -14,5 +14,10 @@ final readonly class UpdateItemDTO
         public ?int $supplierId = null,
         public bool $hasSupplierId = false,
         public bool $hasMaximumThreshold = false,
+        public ?float $unitCost = null,
+        public ?string $storageLocation = null,
+        public bool $hasStorageLocation = false,
+        public ?string $notes = null,
+        public bool $hasNotes = false,
     ) {}
 }

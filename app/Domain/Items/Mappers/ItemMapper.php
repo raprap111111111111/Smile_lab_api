@@ -19,6 +19,9 @@ class ItemMapper
             minimumThreshold: (int) $request->validated('minimum_threshold', 10),
             maximumThreshold: $request->filled('maximum_threshold') ? (int) $request->validated('maximum_threshold') : null,
             supplierId: $request->filled('supplier_id') ? (int) $request->validated('supplier_id') : null,
+            unitCost: $request->filled('unit_cost') ? (float) $request->validated('unit_cost') : 0.0,
+            storageLocation: $request->validated('storage_location'),
+            notes: $request->validated('notes'),
         );
     }
 
@@ -34,6 +37,11 @@ class ItemMapper
             supplierId: $request->has('supplier_id') ? ($request->filled('supplier_id') ? (int) $request->validated('supplier_id') : null) : null,
             hasSupplierId: $request->has('supplier_id'),
             hasMaximumThreshold: $request->has('maximum_threshold'),
+            unitCost: $request->has('unit_cost') ? (float) $request->validated('unit_cost') : null,
+            storageLocation: $request->validated('storage_location'),
+            hasStorageLocation: $request->has('storage_location'),
+            notes: $request->validated('notes'),
+            hasNotes: $request->has('notes'),
         );
     }
 }
