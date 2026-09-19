@@ -25,9 +25,11 @@ final class FefoAllocator
      * gloves is a fact to record, not an error to raise — the caller decides
      * what it means, and for clinical consumption it must never block.
      *
+     * When `$batchId` is given, only that batch is drawn from; FEFO order is bypassed.
+     *
      * @return array{allocations: list<array{batch: InventoryBatch, quantity: int}>, shortfall: int}
      */
-    public function allocate(int $branchId, int $itemId, int $quantity): array
+    public function allocate(int $branchId, int $itemId, int $quantity, ?int $batchId = null): array
     {
         if ($quantity <= 0) {
             return ['allocations' => [], 'shortfall' => 0];
@@ -36,6 +38,7 @@ final class FefoAllocator
         $batches = InventoryBatch::query()
             ->where('branch_id', $branchId)
             ->where('item_id', $itemId)
+            ->when($batchId !== null, fn ($query) => $query->whereKey($batchId))
             ->open()
             ->fefo()
             ->lockForUpdate()

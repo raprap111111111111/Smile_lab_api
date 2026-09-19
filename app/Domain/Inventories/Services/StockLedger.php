@@ -94,7 +94,7 @@ final class StockLedger
         [
             'allocations' => $allocations,
             'shortfall'   => $shortfall,
-        ] = $this->allocator->allocate($dto->branchId, $dto->itemId, $dto->magnitude());
+        ] = $this->allocator->allocate($dto->branchId, $dto->itemId, $dto->magnitude(), $dto->batchId);
 
         $balance = $this->currentBalance($dto->branchId, $dto->itemId);
         $movements = [];

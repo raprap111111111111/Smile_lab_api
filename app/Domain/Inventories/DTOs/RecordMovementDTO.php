@@ -36,6 +36,12 @@ final readonly class RecordMovementDTO
 
         public ?int $performedBy = null,
         public ?string $notes = null,
+        /**
+         * Outflow only: draw from this one batch instead of FEFO order. Used
+         * when the lot itself is why stock is leaving — a recall, a damaged
+         * delivery — so the ledger has to name that lot, not the next to expire.
+         */
+        public ?int $batchId = null,
     ) {}
 
     public function isInflow(): bool
