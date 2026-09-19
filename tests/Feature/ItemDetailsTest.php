@@ -70,7 +70,7 @@ class ItemDetailsTest extends TestCase
             'category' => 'Disposables',
             'unit_of_measure' => 'Pack',
         ])->assertCreated()
-            ->assertJsonPath('data.unit_cost', 0.0)
+            ->assertJsonPath('data.unit_cost', 0)
             ->assertJsonPath('data.storage_location', null);
     }
 

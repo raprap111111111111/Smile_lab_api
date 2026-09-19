@@ -8,11 +8,9 @@ use App\Domain\Branch\Services\BranchScope;
 use App\Domain\Inventories\DTOs\InventorySettings;
 use App\Domain\Settings\DTOs\AppointmentSettings;
 use App\Domain\Settings\Services\SettingService;
-use App\Http\Responses\JsonResponse;
 use Illuminate\Foundation\Console\ServeCommand;
 use Illuminate\Foundation\DevCommands;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Response;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Passport\Passport;
 use Laravel\Reverb\ApplicationManagerServiceProvider;
@@ -54,16 +52,10 @@ class AppServiceProvider extends ServiceProvider
         // application-code frame the guard looks for.
         $this->app->register(ApplicationManagerServiceProvider::class);
         $this->app->register(ReverbServiceProvider::class);
-
     }
 
     public function boot(): void
     {
-        // Override response factory to use custom JSON response that preserves zero fractions
-        Response::macro('json', function ($data = [], $status = 200, array $headers = [], $options = 0) {
-            return new JsonResponse($data, $status, $headers, $options);
-        });
-
         // `php artisan dev` runs its panes under a kill-others supervisor, and
         // Pail hard-requires ext-pcntl, which does not exist on Windows. Without
         // this the logs pane throws on startup and takes the API, Reverb, queue
