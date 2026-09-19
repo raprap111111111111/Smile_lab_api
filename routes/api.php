@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\GalleryController;
 use App\Http\Controllers\Api\ServiceController;
 use App\Http\Controllers\v1\AuthController;
+use App\Http\Controllers\v1\HealthController;
 use App\Http\Controllers\v1\SettingController;
 use App\Http\Controllers\v1\UserController;
 use Illuminate\Support\Facades\Route;
@@ -14,6 +15,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::prefix('v1')->group(function () {
+    Route::get('health', HealthController::class)->middleware('throttle:60,1');
 
     /*
     |------------------------
